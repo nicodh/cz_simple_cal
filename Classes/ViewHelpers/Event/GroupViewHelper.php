@@ -109,7 +109,7 @@ class Tx_CzSimpleCal_ViewHelpers_Event_GroupViewHelper extends Tx_Fluid_Core_Vie
 		$result = array();
 		foreach($events as $event) {
 			$organizerKey = $event->getOrganizer() ? $event->getOrganizer()->getUid() : 0;
-			if(!array_key_exists($locationKey, $result)) {
+			if(!array_key_exists($organizerKey, $result)) {
 				$result[$organizerKey] = array(
 					'info' => $event->getOrganizer() ? $event->getOrganizer() : false,
 					'events' => array(),

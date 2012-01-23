@@ -5,8 +5,8 @@ Tx_Extbase_Utility_Extension::configurePlugin(
 	$_EXTKEY,
 	'Pi1',
 	array(
-		'EventIndex' => 'dispatch',
-		'Event' => 'dispatch',
+		'EventIndex' => 'dispatch,list,show',
+		'Event' => 'dispatch,list,show',
 		'Category' => 'show',
 	),
 	array(
