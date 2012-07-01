@@ -13,8 +13,8 @@ ics {
 				list {
 					startDate  = today
 					endDate    = today +6 months
-
-					maxEvents = 9999
+					getPost = start
+					maxEvents = 1
 					orderBy   = start
 					order     = ASC 
 				}
