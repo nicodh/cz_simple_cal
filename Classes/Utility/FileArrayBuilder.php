@@ -46,15 +46,15 @@ class Tx_CzSimpleCal_Utility_FileArrayBuilder {
 		$return = array();
 		
 		if(!is_array($files)) {
-			$files = is_string($files) && !empty($files) ? t3lib_div::trimExplode(",", $files, false) : array();
+			$files = is_string($files) && !empty($files) ? \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(",", $files, false) : array();
 		}
 		
 		if(!is_array($alternates)) {
-			$alternates = is_string($alternates) && !empty($alternates) ? t3lib_div::trimExplode("\n", $alternates, false) : array();
+			$alternates = is_string($alternates) && !empty($alternates) ? \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode("\n", $alternates, false) : array();
 		}
 		
 		if(!is_array($captions)) {
-			$captions =  is_string($captions) && !empty($captions) ? t3lib_div::trimExplode("\n", $captions, false) : array();	
+			$captions =  is_string($captions) && !empty($captions) ? \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode("\n", $captions, false) : array();
 		}
 		
 		if($path && substr($path, -1) !== '/') {

@@ -125,7 +125,7 @@ class Tx_CzSimpleCal_ViewHelpers_Event_GroupViewHelper extends Tx_Fluid_Core_Vie
 		if(!$this->arguments['orderBy'] && !$this->arguments['order']) {
 			return $events;
 		} elseif($this->arguments['orderBy']) {
-			$this->orderGetMethodName = 'get'.t3lib_div::underscoredToUpperCamelCase($this->arguments['orderBy']);
+			$this->orderGetMethodName = 'get'.\TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($this->arguments['orderBy']);
 			if(usort($events, array($this, "orderByObjectMethod"))) {
 				return $events;
 			} else {

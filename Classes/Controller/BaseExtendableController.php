@@ -1,6 +1,6 @@
 <?php 
 
-abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends Tx_Extbase_MVC_Controller_ActionController {
+abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 	
 	protected $controllerName = '';
 	
@@ -22,15 +22,15 @@ abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends Tx_Ext
 		 * discarded Template view had it). So we do it here.
 		 */
 		if($view instanceof Tx_Fluid_View_TemplateViewInterface) {
-			$extbaseFrameworkConfiguration = Tx_Extbase_Dispatcher::getExtbaseFrameworkConfiguration();
+			$extbaseFrameworkConfiguration = $this->configurationManager->getConfiguration('Framework');
 			if (isset($extbaseFrameworkConfiguration['view']['templateRootPath']) && strlen($extbaseFrameworkConfiguration['view']['templateRootPath']) > 0) {
-				$view->setTemplateRootPath(t3lib_div::getFileAbsFileName($extbaseFrameworkConfiguration['view']['templateRootPath']));
+				$view->setTemplateRootPath(\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($extbaseFrameworkConfiguration['view']['templateRootPath']));
 			}
 			if (isset($extbaseFrameworkConfiguration['view']['layoutRootPath']) && strlen($extbaseFrameworkConfiguration['view']['layoutRootPath']) > 0) {
-				$view->setLayoutRootPath(t3lib_div::getFileAbsFileName($extbaseFrameworkConfiguration['view']['layoutRootPath']));
+				$view->setLayoutRootPath(\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($extbaseFrameworkConfiguration['view']['layoutRootPath']));
 			}
 			if (isset($extbaseFrameworkConfiguration['view']['partialRootPath']) && strlen($extbaseFrameworkConfiguration['view']['partialRootPath']) > 0) {
-				$view->setPartialRootPath(t3lib_div::getFileAbsFileName($extbaseFrameworkConfiguration['view']['partialRootPath']));
+				$view->setPartialRootPath(\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($extbaseFrameworkConfiguration['view']['partialRootPath']));
 			}
 		}
 		
@@ -44,7 +44,7 @@ abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends Tx_Ext
 	 */
 	public function dispatchAction() {
 		if(!$this->controllerName) {
-			t3lib_div::sysLog(
+			\TYPO3\CMS\Core\Utility\GeneralUtility::sysLog(
 				sprintf(
 					'There was no controller name set for class %s.',
 					get_class($this)
@@ -58,7 +58,7 @@ abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends Tx_Ext
 				!is_array($this->settings[$this->controllerName]) ||
 				!isset($this->settings[$this->controllerName]['allowedActions'])
 		) {
-			t3lib_div::sysLog(
+			\TYPO3\CMS\Core\Utility\GeneralUtility::sysLog(
 				sprintf(
 					'There were no allowedActions set on pageId %d, so there was nothing to display for the calendar.',
 					$GLOBALS['TSFE']->id
@@ -68,7 +68,7 @@ abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends Tx_Ext
 			);
 			return '';
 		}
-		$actions = t3lib_div::trimExplode(',', $this->settings[$this->controllerName]['allowedActions'], true);
+		$actions = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->settings[$this->controllerName]['allowedActions'], true);
 		reset($actions);
 		$this->forward(current($actions));
 	}
@@ -136,7 +136,7 @@ abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends Tx_Ext
 		}
 		
 		// throw error if action is not allowed in settings
-		if(!in_array($actionMethodName, t3lib_div::trimExplode(',', $this->settings[$this->controllerName]['allowedActions'], true))) {
+		if(!in_array($actionMethodName, \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->settings[$this->controllerName]['allowedActions'], true))) {
 			throw new Tx_Extbase_MVC_Exception_NoSuchAction('An action "' . $actionMethodName . '" does not exist in controller "' . get_class($this) . '".', 1186669086);
 		}
 		
@@ -222,19 +222,23 @@ abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends Tx_Ext
 		$preparedArguments = array();
 		foreach ($this->arguments as $argument) {
 			$preparedArguments[] = $argument->getValue();
+			$errors = $argument->getValidationResults()->getErrors();
+			if(!empty($errors)) {
+				$argumentsAreValid = FALSE;
+			}
 		}
 
-		if ($this->argumentsMappingResults->hasErrors()) {
+		if (!$argumentsAreValid) {
 			$actionResult = call_user_func(array($this, $this->errorMethodName));
 		} else {
 			$actionResult = call_user_func_array(array($this, $this->actionMethodName), $preparedArguments);
 		}
-		
+
 	//changes start here
-		if ($actionResult === NULL && $this->view instanceof Tx_Fluid_View_TemplateView) {
+		if ($actionResult === NULL && $this->view instanceof \TYPO3\CMS\Fluid\View\TemplateView) {
 			$this->response->appendContent($this->view->render(substr($this->actionMethodName, 0, -6)));
 	//changes end here
-		} elseif ($actionResult === NULL && $this->view instanceof Tx_Extbase_MVC_View_ViewInterface) {
+		} elseif ($actionResult === NULL && $this->view instanceof \TYPO3\CMS\Extbase\Mvc\View\ViewInterface) {
 			$this->response->appendContent($this->view->render());
 		} elseif (is_string($actionResult) && strlen($actionResult) > 0) {
 			$this->response->appendContent($actionResult);
@@ -270,12 +274,12 @@ abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends Tx_Ext
 		// merge the settings from the flexform
 		if(isset($this->settings['override']['action'])) {
 			// this will override values if they are not empty
-			$this->actionSettings = t3lib_div::array_merge_recursive_overrule($this->actionSettings, $this->settings['override']['action'], false, false);
+			$this->actionSettings = \TYPO3\CMS\Core\Utility\GeneralUtility::array_merge_recursive_overrule($this->actionSettings, $this->settings['override']['action'], false, false);
 		}
 		
 		// merge settings from getPost-values
 		if(isset($this->actionSettings['getPostAllowed'])) {
-			$allowed = t3lib_div::trimExplode(',', $this->actionSettings['getPostAllowed'], true);
+			$allowed = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->actionSettings['getPostAllowed'], true);
 			
 			$this->actionSettings = array_merge(
 				$this->actionSettings,
@@ -290,7 +294,7 @@ abstract class Tx_CzSimpleCal_Controller_BaseExtendableController extends Tx_Ext
 	protected function initializeSettings() {
 		if(isset($this->settings['override'])) {
 			// this will override values if they are not empty and they already exist (so no adding of keys)
-			$this->settings = t3lib_div::array_merge_recursive_overrule($this->settings, $this->settings['override'], true, false);
+			$this->settings = \TYPO3\CMS\Core\Utility\GeneralUtility::array_merge_recursive_overrule($this->settings, $this->settings['override'], true, false);
 		}
 	}
 	

@@ -1,24 +1,28 @@
 <?php 
 
+use \TYPO3\CMS\Scheduler;
 /**
  * the scheduler task to index all events
  * 
  * @author Christian Zenker <christian.zenker@599media.de>
  */
-class Tx_CzSimpleCal_Scheduler_Index extends tx_scheduler_Task implements tx_scheduler_AdditionalFieldProvider {
+class Tx_CzSimpleCal_Scheduler_IndexTask extends Scheduler\Task\AbstractTask  {
 	
 	/**
 	 * @var Tx_CzSimpleCal_Indexer_Event
+	 * @inject
 	 */
 	protected $indexer = null;
 	
 	/**
-	 * @var Tx_Extbase_Persistence_ManagerInterface
+	 * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
+	 * @inject
 	 */
 	protected $persistenceManager = null;
 	
 	/**
 	 * @var Tx_CzSimpleCal_Domain_Repository_EventRepository
+	 * @inject
 	 */
 	protected $eventRepository = null;
 	
@@ -64,11 +68,10 @@ class Tx_CzSimpleCal_Scheduler_Index extends tx_scheduler_Task implements tx_sch
 	 * init some needed objects and variables
 	 */
 	protected function init() {
-		$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
-		
-		$this->eventRepository = $objectManager->get('Tx_CzSimpleCal_Domain_Repository_EventRepository');
-		$this->indexer = $objectManager->get('Tx_CzSimpleCal_Indexer_Event');
-		$this->persistenceManager = $objectManager->get('Tx_Extbase_Persistence_ManagerInterface'); 
+		//$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Object_ObjectManager');
+		$this->eventRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_CzSimpleCal_Domain_Repository_EventRepository');
+		$this->indexer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_CzSimpleCal_Indexer_Event');
+		$this->persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
 		
 		
 		try {
@@ -82,7 +85,7 @@ class Tx_CzSimpleCal_Scheduler_Index extends tx_scheduler_Task implements tx_sch
 		
 		try {
 			$memoryLimit = ini_get('memory_limit');
-			$this->memoryLimit = t3lib_div::getBytesFromSizeMeasurement($memoryLimit);
+			$this->memoryLimit = \TYPO3\CMS\Core\Utility\GeneralUtility::getBytesFromSizeMeasurement($memoryLimit);
 		}
 		catch(Exception $e) {}
 		if(!$this->memoryLimit || $this->memoryLimit < 0x2000000) {
@@ -104,7 +107,6 @@ class Tx_CzSimpleCal_Scheduler_Index extends tx_scheduler_Task implements tx_sch
 	 * @return boolean
 	 */
 	public function execute() {
-		
 		$this->init();
 		
 		while($this->shouldAnotherChunkBeProcessed()) {
@@ -119,7 +121,7 @@ class Tx_CzSimpleCal_Scheduler_Index extends tx_scheduler_Task implements tx_sch
 		// if: the script stopped, but not all data could be processed
 		
 		if($GLOBALS['LANG']) {
-			$message = t3lib_div::makeInstance(
+			$message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 			    't3lib_FlashMessage',
 				sprintf(
 					'cz_simple_cal (uid: %d): %s',
@@ -253,90 +255,7 @@ class Tx_CzSimpleCal_Scheduler_Index extends tx_scheduler_Task implements tx_sch
 		$this->persistenceManager->persistAll();
 	}
 	
-/*
- * 
- * implement the tx_scheduler_AdditionalFieldProvider interface
- * 
- * 
- */	
 
-	/**
-	 * Gets additional fields to render in the form to add/edit a task
-	 *
-	 * @param	array					Values of the fields from the add/edit task form
-	 * @param	tx_scheduler_Task		The task object being eddited. Null when adding a task!
-	 * @param	tx_scheduler_Module		Reference to the scheduler backend module
-	 * @return	array					A two dimensional array, array('Identifier' => array('fieldId' => array('code' => '', 'label' => '', 'cshKey' => '', 'cshLabel' => ''))
-	 */
-	public function getAdditionalFields(array &$taskInfo, $task, tx_scheduler_Module $schedulerModule) {
-		$additionalFields = array();
-		
-		if (empty($taskInfo['tx_czsimplecal_minindexage'])) {
-			if ($schedulerModule->CMD == 'add') {
-				$taskInfo['tx_czsimplecal_minindexage'] = $this->minIndexAge; // $task will be null at this point
-			} elseif ($schedulerModule->CMD == 'edit') {
-				$taskInfo['tx_czsimplecal_minindexage'] = $task->minIndexAge;
-			} else {
-				$taskInfo['tx_czsimplecal_minindexage'] = '';
-			}
-		}
-
-			// Write the code for the field
-		$fieldCode = sprintf(
-			'<input type="text" name="tx_scheduler[tx_czsimplecal_minindexage]" id="tx_czsimplecal_minindexage" value="%s" size="30" />',
-			htmlspecialchars($taskInfo['tx_czsimplecal_minindexage'])
-		);
-		$additionalFields[$fieldId] = array(
-			'code'     => $fieldCode,
-			'label'    => 'LLL:EXT:cz_simple_cal/Resources/Private/Language/locallang_mod.xml:tx_czsimplecal_scheduler_index.minindexage.label',
-			'cshKey'   => '',
-			'cshLabel' => 'tx_czsimplecal_minindexage'
-		);
-		
-		return $additionalFields;
-	}
-
-	/**
-	 * Validates the additional fields' values
-	 *
-	 * @param	array					An array containing the data submitted by the add/edit task form
-	 * @param	tx_scheduler_Module		Reference to the scheduler backend module
-	 * @return	boolean					True if validation was ok (or selected class is not relevant), false otherwise
-	 */
-	public function validateAdditionalFields(array &$submittedData, tx_scheduler_Module $schedulerModule) {
-		if(empty($submittedData['tx_czsimplecal_minindexage'])) {
-			$submittedData['tx_czsimplecal_minindexage'] = null;
-		} elseif(!is_string($submittedData['tx_czsimplecal_minindexage'])) {
-			$schedulerModule->addMessage(
-				$GLOBALS['LANG']->sL('LLL:EXT:cz_simple_cal/Resources/Private/Language/locallang_mod.xml:tx_czsimplecal_scheduler_index.minindexage.nostring'),
-				t3lib_FlashMessage::ERROR
-			);
-			return false;
-		} else {
-			if(Tx_CzSimpleCal_Utility_StrToTime::strtotime($submittedData['tx_czsimplecal_minindexage']) === false) {
-				$schedulerModule->addMessage(
-					sprintf(
-						$GLOBALS['LANG']->sL('LLL:EXT:cz_simple_cal/Resources/Private/Language/locallang_mod.xml:tx_czsimplecal_scheduler_index.minindexage.parseerror'),
-						$submittedData['tx_czsimplecal_minindexage']
-					),
-					t3lib_FlashMessage::ERROR
-				);
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Takes care of saving the additional fields' values in the task's object
-	 *
-	 * @param	array					An array containing the data submitted by the add/edit task form
-	 * @param	tx_scheduler_Task		Reference to the scheduler backend module
-	 * @return	void
-	 */
-	public function saveAdditionalFields(array $submittedData, tx_scheduler_Task $task){
-		$task->minIndexAge = $submittedData['tx_czsimplecal_minindexage'];
-	}
 	
 	
 	

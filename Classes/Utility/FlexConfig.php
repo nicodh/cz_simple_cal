@@ -18,7 +18,7 @@ class Tx_CzSimpleCal_Utility_FlexConfig {
 		$allowedActions = array();
 		if(isset($flexConfig['allowedActions'])) {
 			$enabled = array();
-			foreach(t3lib_div::trimExplode(',', $flexConfig['allowedActions'], true) as $i) {
+			foreach(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $flexConfig['allowedActions'], true) as $i) {
 				$enabled[$i.'.'] = '';
 			}
 			$allowedActions = array_intersect_key($flexConfig['allowedActions.'], $enabled);

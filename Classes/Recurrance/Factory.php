@@ -55,13 +55,13 @@ class Tx_CzSimpleCal_Recurrance_Factory {
 			throw new RuntimeException('The recurrance_type should not be empty.');
 		}
 		
-		$className = 'Tx_CzSimpleCal_Recurrance_Type_'.t3lib_div::underscoredToUpperCamelCase($type);
+		$className = 'Tx_CzSimpleCal_Recurrance_Type_'.\TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($type);
 		
 		if(!class_exists($className)) {
 			throw new BadMethodCallException(sprintf('The class %s does not exist for creating recurring events.', $className));
 		}
 		
-		$class = t3lib_div::makeInstance($className);
+		$class = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($className);
 		
 		if(!$class instanceof Tx_CzSimpleCal_Recurrance_Type_Base) {
 			throw new BadMethodCallException(sprintf('The class %s does not implement the Tx_CzSimpleCal_Recurrance_Type_Base.', get_class($class)));
@@ -88,13 +88,13 @@ class Tx_CzSimpleCal_Recurrance_Factory {
 				throw new RuntimeException('The recurrance_type should not be empty.');
 			}
 			
-			$className = 'Tx_CzSimpleCal_Recurrance_Type_'.t3lib_div::underscoredToUpperCamelCase($type);
+			$className = 'Tx_CzSimpleCal_Recurrance_Type_'.\TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($type);
 			
 			if(!class_exists($className)) {
 				throw new BadMethodCallException(sprintf('The class %s does not exist for creating recurring events.', $className));
 			}
 			
-			$class = t3lib_div::makeInstance($className);
+			$class = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($className);
 			
 			if(!$class instanceof Tx_CzSimpleCal_Recurrance_Type_Base) {
 				throw new BadMethodCallException(sprintf('The class %s does not implement Tx_CzSimpleCal_Recurrance_Type_Base.', get_class($class)));

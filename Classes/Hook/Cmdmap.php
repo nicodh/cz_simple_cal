@@ -13,9 +13,8 @@ class Tx_CzSimpleCal_Hook_Cmdmap {
 	public function processCmdmap_postProcess($command, $table, $id, $value, $tce) {
 		if ($table == 'tx_czsimplecal_domain_model_event') {
 			//if: an event was changed
-			$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
-			$indexer = $objectManager->get('Tx_CzSimpleCal_Indexer_Event');
-			
+			$indexer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_CzSimpleCal_Indexer_Event');
+
 			if($command === 'move') {
 				$indexer->update($id);
 			} elseif($command === 'delete') {

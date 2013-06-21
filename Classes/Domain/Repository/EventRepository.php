@@ -29,7 +29,7 @@
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Tx_CzSimpleCal_Domain_Repository_EventRepository extends Tx_Extbase_Persistence_Repository {
+class Tx_CzSimpleCal_Domain_Repository_EventRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 	
 	/**
 	 * find a record by its uid regardless of its pid
@@ -96,7 +96,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends Tx_Extbase_Persis
 		if(is_null($maxAge)) {
 			// if: no maxAge is set, fetch the oldest events
 			$query->setOrderings(array(
-				'last_indexed' => Tx_Extbase_Persistence_Query::ORDER_ASCENDING
+				'last_indexed' => \TYPO3\CMS\Extbase\Persistence\Generic\Query::ORDER_ASCENDING
 			));
 		} else {
 			$query->matching(
@@ -145,7 +145,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends Tx_Extbase_Persis
 				$query->logicalNot($query->equals('uid', $uid))
 			));
 			$query->setOrderings(array(
-				'slug' => Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING
+				'slug' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
 			));
 			$query->setLimit(1);
 			$result = $query->execute();
@@ -172,7 +172,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends Tx_Extbase_Persis
 			setRespectSysLanguage(false)
 		;
 		$query->setOrderings(array(
-			'last_indexed' => Tx_Extbase_Persistence_Query::ORDER_ASCENDING
+			'last_indexed' => \TYPO3\CMS\Extbase\Persistence\Generic\Query::ORDER_ASCENDING
 		));
 		
 		$query->setLimit(1);
@@ -200,7 +200,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends Tx_Extbase_Persis
 		$query->matching($query->equals('cruser_fe', $userId));
 		
 		$query->setOrderings(array(
-			'start_day' => Tx_Extbase_Persistence_Query::ORDER_DESCENDING
+			'start_day' => \TYPO3\CMS\Extbase\Persistence\Generic\Query::ORDER_DESCENDING
 		));
 				
 		return $query->execute();

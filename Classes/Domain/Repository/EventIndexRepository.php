@@ -349,7 +349,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventIndexRepository extends Tx_Extbase_P
 		
 		if(!is_array($filter)) {
 			$filter = array(
-				'value' => t3lib_div::trimExplode(',', $filter, true) 
+				'value' => \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $filter, true)
 			);
 		} elseif(!empty($filter['_typoScriptNodeValue']) && !is_array($filter['_typoScriptNodeValue'])) {
 			/* this field is set if something like
@@ -364,10 +364,10 @@ class Tx_CzSimpleCal_Domain_Repository_EventIndexRepository extends Tx_Extbase_P
 			 * 
 			 * @see Tx_Extbase_Utility_TypoScript
 			 */
-			$filter['value'] = t3lib_div::trimExplode(',', $filter['_typoScriptNodeValue'], true);
+			$filter['value'] = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $filter['_typoScriptNodeValue'], true);
 			unset($filter['_typoScriptNodeValue']);
 		} elseif(!empty($filter['value']) && !is_array($filter['value'])) {
-			$filter['value'] = t3lib_div::trimExplode(',', $filter['value'], true);
+			$filter['value'] = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $filter['value'], true);
 		}
 		
 		foreach($filter['value'] as &$value) {
@@ -452,7 +452,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventIndexRepository extends Tx_Extbase_P
 				$query->logicalNot($query->equals('uid', $uid))
 			));
 			$query->setOrderings(array(
-				'slug' => Tx_Extbase_Persistence_QueryInterface::ORDER_DESCENDING
+				'slug' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
 			));
 			$query->setLimit(1);
 			$result = $query->execute();
@@ -489,7 +489,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventIndexRepository extends Tx_Extbase_P
 			$query->equals('event.uid', $eventUid),
 			$query->greaterThanOrEqual('start', time())
 		));
-		$query->setOrderings(array('start' => Tx_Extbase_Persistence_QueryInterface::ORDER_ASCENDING));
+		$query->setOrderings(array('start' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING));
 		
 		return $query->execute();
 	}

@@ -64,7 +64,7 @@ class Tx_CzSimpleCal_ViewHelpers_Widget_EventIndex_Controller_CountController ex
 		if(empty($value)) {
 			return;
 		} elseif(is_numeric($value)) {
-			return t3lib_div::intInRange($this->argumentName, 0);
+			return \TYPO3\CMS\Core\Utility\GeneralUtility::intInRange($this->argumentName, 0);
 		} elseif(is_string($value)) {
 			return Tx_CzSimpleCal_Utility_StrToTime::strtotime($value);
 		} elseif($value instanceof DateTime) {
@@ -105,13 +105,13 @@ class Tx_CzSimpleCal_ViewHelpers_Widget_EventIndex_Controller_CountController ex
 				&& method_exists($view, 'setTemplateRootPath')) {
 			
 			if($this->widgetConfiguration->hasArgument('templateFilePath')) {
-				$view->setTemplatePathAndFilename(t3lib_div::getFileAbsFileName($extbaseFrameworkConfiguration['view']['widget'][$widgetViewHelperClassName]['templateRootPath']).$this->widgetConfiguration['templateFilePath']);
+				$view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($extbaseFrameworkConfiguration['view']['widget'][$widgetViewHelperClassName]['templateRootPath']).$this->widgetConfiguration['templateFilePath']);
 			} else {
-				$view->setTemplateRootPath(t3lib_div::getFileAbsFileName($extbaseFrameworkConfiguration['view']['widget'][$widgetViewHelperClassName]['templateRootPath']));
+				$view->setTemplateRootPath(\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($extbaseFrameworkConfiguration['view']['widget'][$widgetViewHelperClassName]['templateRootPath']));
 			}
 			
 		} elseif($this->widgetConfiguration->hasArgument('templateFilePath')) {
-			$view->setTemplatePathAndFilename(t3lib_div::getFileAbsFileName($this->widgetConfiguration['templateFilePath']));
+			$view->setTemplatePathAndFilename(\TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($this->widgetConfiguration['templateFilePath']));
 		}
 	}
 }

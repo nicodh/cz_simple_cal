@@ -71,7 +71,7 @@ class Tx_CzSimpleCal_Utility_StrToTime {
 		
 		$time = self::doSubstitutions($time);
 				
-		foreach(t3lib_div::trimExplode('|', $time, true) as $time) {
+		foreach(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('|', $time, true) as $time) {
 			$now = strtotime(self::strftime($time, $now), $now);
 			if($now === false) {
 				return false;

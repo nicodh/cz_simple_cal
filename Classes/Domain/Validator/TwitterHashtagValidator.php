@@ -27,7 +27,7 @@ class Tx_CzSimpleCal_Domain_Validator_TwitterHashtagValidator extends Tx_Extbase
 			}
 		}
 
-		$tags = t3lib_div::trimExplode(',', $value);
+		$tags = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $value);
 		if($this->options['minimum'] && $this->options['minimum'] > count($tags)) {
 			$this->addError(sprintf('at least %d items required', $this->options['minimum']), 'minimum');
 			return false;

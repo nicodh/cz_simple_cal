@@ -161,7 +161,7 @@ class Tx_CzSimpleCal_Domain_Model_EventIndex extends Tx_CzSimpleCal_Domain_Model
 		$obj = new Tx_CzSimpleCal_Domain_Model_EventIndex();
 		
 		foreach($data as $name => $value) {
-			$methodName = 'set'.t3lib_div::underscoredToUpperCamelCase($name);
+			$methodName = 'set'.\TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($name);
 			
 			// check if there is a setter defined (use of is_callable to check if the scope is public)
 			if(!is_callable(array($obj,	$methodName))) {
@@ -180,6 +180,14 @@ class Tx_CzSimpleCal_Domain_Model_EventIndex extends Tx_CzSimpleCal_Domain_Model
 	 * @return string
 	 */
 	public function getHash() {
+		if(is_null($this->getEvent())) {
+			// TODO: how can this happen??
+			return md5(
+				'eventindex-'.
+				$this->getStart().'-'.
+				$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+			);
+		}
 		return md5(
 			'eventindex-'.
 			$this->getEvent()->getHash().'-'.
@@ -197,7 +205,8 @@ class Tx_CzSimpleCal_Domain_Model_EventIndex extends Tx_CzSimpleCal_Domain_Model
 	 */
 	public function __call($method, $args) {
 		if(!$this->event) {
-			throw new BadMethodCallException(sprintf('The method %s was not found in %s.', $method, get_class($this)));
+			return NULL;
+			//throw new BadMethodCallException(sprintf('The method %s was not found in %s.', $method, get_class($this)));
 		}
 		$callback = array($this->event, $method);
 		if(!is_callable($callback)) {
@@ -246,7 +255,7 @@ class Tx_CzSimpleCal_Domain_Model_EventIndex extends Tx_CzSimpleCal_Domain_Model
 		$value = $this->generateRawSlug();
 		$value = Tx_CzSimpleCal_Utility_Inflector::urlize($value);
 		
-		$eventIndexRepository = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager')->
+		$eventIndexRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Object_ObjectManager')->
 			get('Tx_CzSimpleCal_Domain_Repository_EventIndexRepository')
 		;
 		$slug = $eventIndexRepository->makeSlugUnique($value, $this->uid);

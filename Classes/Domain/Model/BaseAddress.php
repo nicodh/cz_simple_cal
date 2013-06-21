@@ -637,7 +637,7 @@ class Tx_CzSimpleCal_Domain_Model_BaseAddress extends Tx_CzSimpleCal_Domain_Mode
 	 */
 	public function getImages() {
 		if(is_null($this->_cache_images)) {
-			t3lib_div::loadTCA('tt_address');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('tt_address');
 			$this->_cache_images = Tx_CzSimpleCal_Utility_FileArrayBuilder::build(
 				$this->image,
 				$GLOBALS['TCA']['tt_address']['columns']['image']['config']['uploadfolder']

@@ -36,7 +36,7 @@ class Tx_CzSimpleCal_Hook_Datamap {
 			
 			if($status == 'new') {
 				// if: record is new
-				$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+				$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Object_ObjectManager');
 				$indexer = $objectManager->get('Tx_CzSimpleCal_Indexer_Event');
 				
 				// get the uid of the new record
@@ -53,7 +53,7 @@ class Tx_CzSimpleCal_Hook_Datamap {
 				// index events
 				$indexer->create($event);
 				
-				$message = t3lib_div::makeInstance(
+				$message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 					't3lib_FlashMessage',
 					$GLOBALS['LANG']->getLL('flashmessages.tx_czsimplecal_domain_model_event.create'),
 					'',
@@ -65,11 +65,11 @@ class Tx_CzSimpleCal_Hook_Datamap {
 			} else {
 				if($this->haveFieldsChanged(Tx_CzSimpleCal_Domain_Model_Event::getFieldsRequiringReindexing(), $fieldArray)) {
 					//if: record was updated and a value that requires re-indexing was changed
-					$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+					$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Object_ObjectManager');
 					$indexer = $objectManager->get('Tx_CzSimpleCal_Indexer_Event');
 					$indexer->update($id);
 					
-					$message = t3lib_div::makeInstance(
+					$message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 						't3lib_FlashMessage',
 						$GLOBALS['LANG']->getLL('flashmessages.tx_czsimplecal_domain_model_event.updateAndIndex'),
 						'',
@@ -78,7 +78,7 @@ class Tx_CzSimpleCal_Hook_Datamap {
 					t3lib_FlashMessageQueue::addMessage($message);
 					
 				} else {
-					$message = t3lib_div::makeInstance(
+					$message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 						't3lib_FlashMessage',
 						$GLOBALS['LANG']->getLL('flashmessages.tx_czsimplecal_domain_model_event.updateNoIndex'),
 						'',
@@ -103,7 +103,7 @@ class Tx_CzSimpleCal_Hook_Datamap {
 	public function processDatamap_preProcessFieldArray(&$fieldArray, $table, $id, $tce) {
 		if($table == 'tx_czsimplecal_domain_model_event' || $table == 'tx_czsimplecal_domain_model_exception') {
 			
-			t3lib_div::loadTCA($table);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($table);
 			foreach(array('start_time', 'end_date', 'end_time', 'recurrance_until') as $fieldName) {
 				if(array_key_exists($fieldName, $fieldArray)) {
 					/* 
@@ -178,7 +178,7 @@ class Tx_CzSimpleCal_Hook_Datamap {
 	 */
 	protected function getEventRepository() {
 		if(is_null($this->eventRepository)) {
-			$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+			$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Object_ObjectManager');
 			$this->eventRepository = $objectManager->get('Tx_CzSimpleCal_Domain_Repository_EventRepository');
 		}
 		return $this->eventRepository;

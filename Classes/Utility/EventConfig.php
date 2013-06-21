@@ -12,7 +12,7 @@ class Tx_CzSimpleCal_Utility_EventConfig {
 			return;
 		}
 		
-		$className = 'Tx_CzSimpleCal_Recurrance_Type_'.t3lib_div::underscoredToUpperCamelCase($type);
+		$className = 'Tx_CzSimpleCal_Recurrance_Type_'.\TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($type);
 		$callback = array($className, 'getSubtypes');
 		
 		if(!class_exists($className) || !is_callable($callback)) {

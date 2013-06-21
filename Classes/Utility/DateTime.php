@@ -10,7 +10,7 @@ class Tx_CzSimpleCal_Utility_DateTime extends DateTime {
 	public function __construct($dateTime = null, $timezone = null) {
 		$time = Tx_CzSimpleCal_Utility_StrToTime::doSubstitutions($dateTime);
 		
-		$time = t3lib_div::trimExplode('|', $time, true);
+		$time = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('|', $time, true);
 		
 		$thisTime = Tx_CzSimpleCal_Utility_StrToTime::strftime(array_shift($time));
 		
@@ -64,7 +64,7 @@ class Tx_CzSimpleCal_Utility_DateTime extends DateTime {
 
 	public function modify($dateTime) {
 		$time = Tx_CzSimpleCal_Utility_StrToTime::doSubstitutions($dateTime);
-		$time = t3lib_div::trimExplode('|', $time, true);
+		$time = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('|', $time, true);
 		$this->doModify($time);
 	}
 //	

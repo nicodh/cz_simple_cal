@@ -150,7 +150,7 @@ class Tx_CzSimpleCal_Domain_Validator_UserEventValidator extends Tx_Extbase_Vali
 	 */
 	protected function getObjectManager() {
 		if(is_null($this->objectManager)) {
-			$this->objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+			$this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Object_ObjectManager');
 		}
 		return $this->objectManager;
 	}

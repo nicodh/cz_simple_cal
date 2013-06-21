@@ -35,8 +35,7 @@
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
 
-class Tx_CzSimpleCal_Controller_EventAdministrationController extends Tx_Extbase_MVC_Controller_ActionController
-{
+class Tx_CzSimpleCal_Controller_EventAdministrationController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
 
 	/**
 	 * @var Tx_CzSimpleCal_Domain_Repository_EventRepository
@@ -48,8 +47,7 @@ class Tx_CzSimpleCal_Controller_EventAdministrationController extends Tx_Extbase
 	 *
 	 * @param Tx_CzSimpleCal_Domain_Repository_EventRepository $eventRepository
 	 */
-	public function injectEventRepository(Tx_CzSimpleCal_Domain_Repository_EventRepository $eventRepository)
-	{
+	public function injectEventRepository(Tx_CzSimpleCal_Domain_Repository_EventRepository $eventRepository) {
 		$this->eventRepository = $eventRepository;
 	}
 
@@ -82,10 +80,9 @@ class Tx_CzSimpleCal_Controller_EventAdministrationController extends Tx_Extbase
 	 *
 	 * @return Tx_Extbase_Object_ObjectManager
 	 */
-	public function getObjectManager()
-	{
+	public function getObjectManager() {
 		if (is_null($this->objectManager)) {
-			$this->objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
+			$this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Object_ObjectManager');
 		}
 		return $this->objectManager;
 	}
@@ -287,7 +284,7 @@ class Tx_CzSimpleCal_Controller_EventAdministrationController extends Tx_Extbase
 //		if (isset($this->settings['overrides']['categories'])) {
 //			$categories = $this->getObjectManager()->
 //				get('Tx_CzSimpleCal_Domain_Repository_CategoryRepository')->
-//				findAllByUids(t3lib_div::trimExplode(',', $this->settings['overrides']['categories']));
+//				findAllByUids(\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->settings['overrides']['categories']));
 //			if (is_null($event->getCategories())) {
 //				$event->setCategories($this->getObjectManager()->get('Tx_Extbase_Persistence_ObjectStorage'));
 //			}
@@ -333,7 +330,7 @@ class Tx_CzSimpleCal_Controller_EventAdministrationController extends Tx_Extbase
 		}
 
 		$cats = array();
-        foreach(t3lib_div::intExplode(',', $this->settings['feEditableCategories']) as $id){
+        foreach(\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $this->settings['feEditableCategories']) as $id){
             $cats[] = intval($id);
         }
         foreach($event->getCategories() as $cat){
@@ -356,14 +353,14 @@ class Tx_CzSimpleCal_Controller_EventAdministrationController extends Tx_Extbase
 		}
 
 		$pids = $this->settings['clearCachePages'];
-		$pids = t3lib_div::trimExplode(',', $pids, true);
+		$pids = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $pids, true);
 
 		if (empty($pids)) {
 			return;
 		}
 
 		// init TCEmain object
-		$tce = t3lib_div::makeInstance('t3lib_TCEmain');
+		$tce = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_TCEmain');
 		if (!$tce->BE_USER) {
 			/* that's a little ugly here:
 			 * We need some BE_USER as the cleanCache event will be logged to syslog.
@@ -373,7 +370,7 @@ class Tx_CzSimpleCal_Controller_EventAdministrationController extends Tx_Extbase
 			 * So we use this dummy class "Tx_CzSimpleCal_Utility_Null" that just
 			 * ignores everything.
 			 */
-			$tce->BE_USER = t3lib_div::makeInstance('Tx_CzSimpleCal_Utility_Null');
+			$tce->BE_USER = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_CzSimpleCal_Utility_Null');
 		}
 		foreach ($pids as $pid) {
 			$pid = intval($pid);
@@ -393,7 +390,7 @@ class Tx_CzSimpleCal_Controller_EventAdministrationController extends Tx_Extbase
 	 */
 	protected function logEventLifecycle($event, $action)
 	{
-		$user = t3lib_div::makeInstance('t3lib_userAuthGroup');
+		$user = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_userAuthGroup');
 		$actions = array(
 			1 => 'added',
 			2 => 'edited',
@@ -426,7 +423,7 @@ class Tx_CzSimpleCal_Controller_EventAdministrationController extends Tx_Extbase
 	protected function getCategories()
 	{
 		return $this->categoryRepository->findAllByUids(
-			t3lib_div::intExplode(',', $this->settings['feEditableCategories'])
+			\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $this->settings['feEditableCategories'])
 		);
 	}
 }

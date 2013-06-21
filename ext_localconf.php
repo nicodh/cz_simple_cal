@@ -24,11 +24,11 @@ Tx_Extbase_Utility_Extension::configurePlugin(
 	)
 );
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['Tx_CzSimpleCal_Scheduler_Index'] = array(
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['Tx_CzSimpleCal_Scheduler_IndexTask'] = array(
     'extension'        => $_EXTKEY,
     'title'            => 'LLL:EXT:'.$_EXTKEY.'/Resources/Private/Language/locallang_mod.xml:tx_czsimplecal_scheduler_index.label',
     'description'      => 'LLL:EXT:'.$_EXTKEY.'/Resources/Private/Language/locallang_mod.xml:tx_czsimplecal_scheduler_index.description',
-	'additionalFields' => 'tx_czsimplecal_scheduler_index'
+	'additionalFields' => 'tx_czsimplecal_scheduler_indextaskadditionalfields'
 );
 
 // add default pageTSConfig

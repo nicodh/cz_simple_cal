@@ -34,6 +34,12 @@
 class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_BaseEvent {
 
 	/**
+	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
+	 * @inject
+	 */
+	protected $objectManager;
+
+	/**
 	 * an array of fields that if changed require a reindexing of all the events
 	 * 
 	 * @var array
@@ -178,7 +184,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	
 	/**
 	 * categories
-	 * @var Tx_Extbase_Persistence_ObjectStorage<Tx_CzSimpleCal_Domain_Model_Category>
+	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<Tx_CzSimpleCal_Domain_Model_Category>
 	 */
 	protected $categories;
 	
@@ -507,17 +513,17 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	/**
 	 * Setter for category
 	 *
-	 * @param Tx_Extbase_Persistence_ObjectStorage<Tx_CzSimpleCal_Domain_Model_Category> $categories categories
+	 * @param \TYPO3\CMS\Extbase\Persistence\ObjectStorage<Tx_CzSimpleCal_Domain_Model_Category> $categories categories
 	 * @return void
 	 */
-	public function setCategories(Tx_Extbase_Persistence_ObjectStorage $categories = NULL) {
+	public function setCategories(\TYPO3\CMS\Extbase\Persistence\ObjectStorage $categories = NULL) {
 		$this->categories = $categories;
 	}
 
 	/**
 	 * Getter for category
 	 *
-	 * @return Tx_Extbase_Persistence_ObjectStorage<Tx_CzSimpleCal_Domain_Model_Category> categories
+	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<Tx_CzSimpleCal_Domain_Model_Category> categories
 	 */
 	public function getCategories() {
 		return $this->categories;
@@ -544,8 +550,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 */
 	public function addCategory(Tx_CzSimpleCal_Domain_Model_Category $category) {
 		if(!is_object($this->categories)) {
-			$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
-			$this->categories = $objectManager->get('Tx_Extbase_Persistence_ObjectStorage');
+			$this->categories = $this->objectManager->get('\TYPO3\CMS\Extbase\Persistence\ObjectStorage');
 		}
 		$this->categories->attach($category);
 	}
@@ -566,7 +571,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 * Extbase internal functionality can't be used here as 
 	 * the records need to be fetched from two different tables
 	 *
-	 * @return Tx_Extbase_Persistence_ObjectStorage<Tx_CzSimpleCal_Domain_Model_Exception> exception
+	 * @return \TYPO3\CMS\Extbase\Persistence\ObjectStorage<Tx_CzSimpleCal_Domain_Model_Exception> exception
 	 */
 	public function getExceptions() {
 		if(is_null($this->exceptions_)) {
@@ -574,9 +579,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 			 * in domain model objects
 			 */
 			
-			$exceptionRepository = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager')->
-				get('Tx_CzSimpleCal_Domain_Repository_ExceptionRepository')
-			;
+			$exceptionRepository = $this->objectManager->get('Tx_CzSimpleCal_Domain_Repository_ExceptionRepository');
 			
 			$this->exceptions_ = $exceptionRepository->findAllForEventId($this->uid);
 		}
@@ -659,8 +662,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 * @return null
 	 */
 	protected function buildOrganizerDummy() {
-		$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
-		$this->organizerDummy = $objectManager->get('Tx_CzSimpleCal_Domain_Model_AddressDummy');
+		$this->organizerDummy = $this->objectManager->get('Tx_CzSimpleCal_Domain_Model_AddressDummy');
 		
 		$this->organizerDummy->setName($this->organizerName);
 		$this->organizerDummy->setAddress($this->organizerAddress);
@@ -701,8 +703,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 * @return null
 	 */
 	protected function buildLocationDummy() {
-		$objectManager = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager');
-		$this->locationDummy = $objectManager->get('Tx_CzSimpleCal_Domain_Model_AddressDummy');
+		$this->locationDummy = $this->objectManager->get('Tx_CzSimpleCal_Domain_Model_AddressDummy');
 		
 		$this->locationDummy->setName($this->locationName);
 		$this->locationDummy->setAddress($this->locationAddress);
@@ -769,7 +770,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 */
 	public function setSlug($slug) {
 		if(preg_match('/^[a-z0-9\-]*$/i', $slug) === false) {
-			throw new InvalidArgument(sprintf('"%s" is no valid slug. Only ASCII-letters, numbers and the hyphen are allowed.'));
+			throw new \Exception(sprintf('"%s" is no valid slug. Only ASCII-letters, numbers and the hyphen are allowed.'));
 		}
 		$this->slug = $slug;
 		return $this;
@@ -784,8 +785,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 		$value = $this->generateRawSlug();
 		$value = Tx_CzSimpleCal_Utility_Inflector::urlize($value);
 		
-		$eventRepository = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager')->
-			get('Tx_CzSimpleCal_Domain_Repository_EventRepository')
+		$eventRepository = $this->objectManager->get('Tx_CzSimpleCal_Domain_Repository_EventRepository')
 		;
 		$slug = $eventRepository->makeSlugUnique($value, $this->uid);
 		$this->setSlug($slug);
@@ -854,7 +854,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 */
 	public function getNextAppointments($limit = 3) {
 		if(is_null($this->nextAppointments) || $this->nextAppointmentsCount < $limit) {
-			$eventIndexRepository = t3lib_div::makeInstance('Tx_Extbase_Object_ObjectManager')->
+			$eventIndexRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Object_ObjectManager')->
 				get('Tx_CzSimpleCal_Domain_Repository_EventIndexRepository')
 			;
 			$this->nextAppointments = $eventIndexRepository->
@@ -923,7 +923,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 */
 	public function getImages() {
 		if(is_null($this->_cache_images)) {
-			t3lib_div::loadTCA('tx_czsimplecal_domain_model_event');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('tx_czsimplecal_domain_model_event');
 			$this->_cache_images = Tx_CzSimpleCal_Utility_FileArrayBuilder::build(
 				$this->images,
 				$GLOBALS['TCA']['tx_czsimplecal_domain_model_event']['columns']['images']['config']['uploadfolder'],
@@ -948,7 +948,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 */
 	public function getFiles() {
 		if(is_null($this->_cache_files)) {
-			t3lib_div::loadTCA('tx_czsimplecal_domain_model_event');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('tx_czsimplecal_domain_model_event');
 			$this->_cache_files = Tx_CzSimpleCal_Utility_FileArrayBuilder::build(
 				$this->files,
 				$GLOBALS['TCA']['tx_czsimplecal_domain_model_event']['columns']['files']['config']['uploadfolder'],
@@ -1014,7 +1014,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 * @return null
 	 */
 	protected function buildTwitterHashtags() {
-		$this->twitterHashtags_ = t3lib_div::trimExplode(',', $this->twitterHashtags, true);
+		$this->twitterHashtags_ = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->twitterHashtags, true);
 		
 		// make sure each tag starts with a hash ("#")
 		foreach($this->twitterHashtags_ as &$hashtag) {
@@ -1056,7 +1056,7 @@ class Tx_CzSimpleCal_Domain_Model_Event extends Tx_CzSimpleCal_Domain_Model_Base
 	 * @return null
 	 */
 	protected function buildFlickrTags() {
-		$this->flickrTags_ = t3lib_div::trimExplode(',', $this->flickrTags, true);
+		$this->flickrTags_ = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $this->flickrTags, true);
 	}
 	
 

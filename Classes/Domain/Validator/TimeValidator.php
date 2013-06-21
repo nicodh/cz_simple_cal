@@ -35,7 +35,7 @@ class Tx_CzSimpleCal_Domain_Validator_TimeValidator extends Tx_Extbase_Validatio
 				$this->addError('Please use hh:mm as format.', 'format');
 				return false;
 			}
-			list($hour, $min) = t3lib_div::trimExplode(':', $value);
+			list($hour, $min) = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(':', $value);
 			if($hour < 0 || $hour > 23) {
 				$this->addError('Please use hh:mm as format.', 'format');
 				return false;
