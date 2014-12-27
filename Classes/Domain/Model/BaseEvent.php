@@ -167,7 +167,7 @@ abstract class Tx_CzSimpleCal_Domain_Model_BaseEvent extends Tx_CzSimpleCal_Doma
 	 */
 	public function setEndDay($endDay) {
 		
-		$this->endDay = (empty($endDay) && $endDay !== 0) || $endDay < 0 ? 
+		$this->endDay = empty($endDay) || $endDay < 0 ?
 			-1 : 
 			$endDay
 		;
@@ -180,7 +180,7 @@ abstract class Tx_CzSimpleCal_Domain_Model_BaseEvent extends Tx_CzSimpleCal_Doma
 	 */
 	public function getEndDay() {
 		return is_numeric($this->endDay) ? 
-			($this->endDay < 0 ? null : strftime('%Y-%m-%d', $this->endDay)):
+			($this->endDay < 1 ? null : strftime('%Y-%m-%d', $this->endDay)):
 			$this->endDay
 		;
 	}

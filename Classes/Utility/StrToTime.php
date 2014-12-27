@@ -38,6 +38,8 @@ class Tx_CzSimpleCal_Utility_StrToTime {
 		'last day of this month' => '%Y-%m-01 %H:%M:%S +1 month -1 day|',
 		'last day of last month' => '%Y-%m-01 %H:%M:%S -1 day|',
 		'last day of next month' => '%Y-%m-01 %H:%M:%S +2 months -1 day|',
+        'last day of this year' => '%Y-12-31 %H:%M:%S|',
+        'last day of next year' => '%Y-12-31 %H:%M:%S +1 year|',
 	);
 	
 	/**

@@ -44,24 +44,25 @@ class Tx_CzSimpleCal_ViewHelpers_Calendar_OnNewDayViewHelper extends Tx_Fluid_Co
 	public function render($event, $label = '') {
 		
 		$className = get_class($this);
-		
+		$lastEvent = NULL;
+
 		$name = 'last_day_wrapper_date';
 		if($label) {
 			$name.='_'.$label;
 		}
 		
 		if ($this->viewHelperVariableContainer->exists($className, $name)) {
-			$lastDay = $this->viewHelperVariableContainer->get($className, $name);
+			$lastEvent = $this->viewHelperVariableContainer->get($className, $name);
 		} else {
 			
 		}
 		
 		$thisDay = strtotime('midnight', $event->getStart());
 		
-		if($thisDay == $lastDay) {
+		if(!is_null($lastEvent) && strtotime('midnight',$lastEvent->getStart()) == $thisDay && !$lastEvent->getEndDay() && !$event->getEndDay()) {
 			return '';
 		} else {
-			$this->viewHelperVariableContainer->addOrUpdate($className, $name, $thisDay);
+			$this->viewHelperVariableContainer->addOrUpdate($className, $name, $event);
 			return $this->renderChildren();
 		}
 	}

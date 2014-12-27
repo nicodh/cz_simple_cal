@@ -85,6 +85,7 @@
 			<label index="field.action.endDate.thisMonth">Ende dieses Monats</label>
 			<label index="field.action.endDate.nextMonth">Ende nächsten Monats</label>
 			<label index="field.action.endDate.thisYear">Ende des Jahres</label>
+            <label index="field.action.endDate.nextYear">Ende des nächsten Jahres</label>
 			
 			<label index="field.action.filterCategories">zeige nur diese Kategorien</label>
 			<label index="field.action.filterOrganizer">Zeige nur diese Veranstalter</label>

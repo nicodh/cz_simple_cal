@@ -14,16 +14,19 @@ class Tx_CzSimpleCal_Indexer_Event {
 	
 	/**
 	 * @var Tx_CzSimpleCal_Domain_Repository_EventRepository
+	 * @inject
 	 */
 	protected $eventRepository = null;
 	
 	/**
 	 * @var Tx_CzSimpleCal_Domain_Repository_EventIndexRepository
+	 * @inject
 	 */
 	protected $eventIndexRepository = null;
 	
 	/**
 	 * @var Tx_Extbase_Persistence_ManagerInterface
+	 * @inject
 	 */
 	protected $persistenceManager = null;
 
@@ -33,10 +36,10 @@ class Tx_CzSimpleCal_Indexer_Event {
 	 */
 	public function __construct() {
 		//\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Dispatcher');
-
-		$this->eventIndexRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_CzSimpleCal_Domain_Repository_EventIndexRepository');;
-		$this->eventRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_CzSimpleCal_Domain_Repository_EventRepository');
-		$this->persistenceManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
+		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+		$this->eventIndexRepository = $objectManager->get('Tx_CzSimpleCal_Domain_Repository_EventIndexRepository');
+		$this->eventRepository = $objectManager->get('Tx_CzSimpleCal_Domain_Repository_EventRepository');
+		$this->persistenceManager = $objectManager->get('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager');
 	}
 	
 	/**

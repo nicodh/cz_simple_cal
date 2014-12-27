@@ -181,12 +181,14 @@ class Tx_CzSimpleCal_Domain_Model_EventIndex extends Tx_CzSimpleCal_Domain_Model
 	 */
 	public function getHash() {
 		if(is_null($this->getEvent())) {
-			// TODO: how can this happen??
 			return md5(
-				'eventindex-'.
-				$this->getStart().'-'.
-				$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
-			);
+						'eventindex-'.
+						$this->getStart().'-'.
+						$GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
+					);
+
+			//\TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($this);
+			//die();
 		}
 		return md5(
 			'eventindex-'.

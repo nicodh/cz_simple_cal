@@ -41,7 +41,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends \TYPO3\CMS\Extbas
 		$query = $this->createQuery();
 		$query->getQuerySettings()->
 			setRespectStoragePage(false)->
-			setRespectEnableFields(false)->
+			setIgnoreEnableFields(TRUE)->
 			setRespectSysLanguage(false)
 		;
 		$query->setLimit(1);
@@ -67,7 +67,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends \TYPO3\CMS\Extbas
 		$query = $this->createQuery();
 		$query->getQuerySettings()->
 			setRespectStoragePage(false)->
-			setRespectEnableFields(false)->
+			setIgnoreEnableFields(TRUE)->
 			setRespectSysLanguage(false)
 		;
 		
@@ -85,7 +85,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends \TYPO3\CMS\Extbas
 		$query = $this->createQuery();
 		$query->getQuerySettings()->
 			setRespectStoragePage(false)->
-			setRespectEnableFields(false)->
+			setIgnoreEnableFields(TRUE)->
 			setRespectSysLanguage(false)
 		;
 		if(!is_null($limit)) {
@@ -123,7 +123,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends \TYPO3\CMS\Extbas
 		$query = $this->createQuery();
 		$query->getQuerySettings()->
 			setRespectStoragePage(false)->
-			setRespectEnableFields(false)->
+			setIgnoreEnableFields(TRUE)->
 			setRespectSysLanguage(false)
 		;
 		$query->matching($query->logicalAnd(
@@ -137,7 +137,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends \TYPO3\CMS\Extbas
 			$query = $this->createQuery();
 			$query->getQuerySettings()->
 				setRespectStoragePage(false)->
-				setRespectEnableFields(false)->
+				setIgnoreEnableFields(TRUE)->
 				setRespectSysLanguage(false)
 			;
 			$query->matching($query->logicalAnd(
@@ -168,7 +168,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventRepository extends \TYPO3\CMS\Extbas
 		$query = $this->createQuery();
 		$query->getQuerySettings()->
 			setRespectStoragePage(false)->
-			setRespectEnableFields(false)->
+			setIgnoreEnableFields(TRUE)->
 			setRespectSysLanguage(false)
 		;
 		$query->setOrderings(array(

@@ -29,7 +29,7 @@
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Tx_CzSimpleCal_Domain_Repository_CategoryRepository extends Tx_Extbase_Persistence_Repository {
+class Tx_CzSimpleCal_Domain_Repository_CategoryRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 	
 	public function findAllByUids($uids) {
 		$query = $this->createQuery();

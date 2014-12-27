@@ -157,6 +157,10 @@
 						<numIndex index="0">LLL:EXT:cz_simple_cal/Resources/Private/Language/locallang_flex.xml:field.action.endDate.thisYear</numIndex>
 						<numIndex index="1">last day of this year 23:59:59</numIndex>
 					</numIndex>
+                    <numIndex index="8" type="array">
+                        <numIndex index="0">LLL:EXT:cz_simple_cal/Resources/Private/Language/locallang_flex.xml:field.action.endDate.nextYear</numIndex>
+                        <numIndex index="1">last day of next year 23:59:59</numIndex>
+                    </numIndex>
                 </items>
               </config>
             </TCEforms>

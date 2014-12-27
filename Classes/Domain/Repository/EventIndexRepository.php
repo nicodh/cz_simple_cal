@@ -29,7 +29,7 @@
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  */
-class Tx_CzSimpleCal_Domain_Repository_EventIndexRepository extends Tx_Extbase_Persistence_Repository {
+class Tx_CzSimpleCal_Domain_Repository_EventIndexRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 	
 	/**
 	 * find all records and return them ordered by the start date ascending
@@ -430,7 +430,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventIndexRepository extends Tx_Extbase_P
 		$query = $this->createQuery();
 		$query->getQuerySettings()->
 			setRespectStoragePage(false)->
-			setRespectEnableFields(false)->
+			setIgnoreEnableFields(TRUE)->
 			setRespectSysLanguage(false)
 		;
 		$query->matching($query->logicalAnd(
@@ -444,7 +444,7 @@ class Tx_CzSimpleCal_Domain_Repository_EventIndexRepository extends Tx_Extbase_P
 			$query = $this->createQuery();
 			$query->getQuerySettings()->
 				setRespectStoragePage(false)->
-				setRespectEnableFields(false)->
+				setIgnoreEnableFields(TRUE)->
 				setRespectSysLanguage(false)
 			;
 			$query->matching($query->logicalAnd(
