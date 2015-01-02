@@ -53,13 +53,8 @@ class Tx_CzSimpleCal_Hook_Datamap {
 				// index events
 				$indexer->create($event);
 				
-				$message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-					't3lib_FlashMessage',
-					$GLOBALS['LANG']->getLL('flashmessages.tx_czsimplecal_domain_model_event.create'),
-					'',
-					t3lib_FlashMessage::OK
-				);
-				t3lib_FlashMessageQueue::addMessage($message);
+				$this->addFlashMessage($GLOBALS['LANG']->getLL('flashmessages.tx_czsimplecal_domain_model_event.create'),'', \TYPO3\CMS\Core\Messaging\FlashMessage::OK);
+
 				
 				
 			} else {
@@ -68,26 +63,22 @@ class Tx_CzSimpleCal_Hook_Datamap {
 					$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Tx_Extbase_Object_ObjectManager');
 					$indexer = $objectManager->get('Tx_CzSimpleCal_Indexer_Event');
 					$indexer->update($id);
-					
-					$message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-						't3lib_FlashMessage',
-						$GLOBALS['LANG']->getLL('flashmessages.tx_czsimplecal_domain_model_event.updateAndIndex'),
-						'',
-						t3lib_FlashMessage::OK
-					);
-					t3lib_FlashMessageQueue::addMessage($message);
+					$this->addFlashMessage($GLOBALS['LANG']->getLL('flashmessages.tx_czsimplecal_domain_model_event.updateAndIndex'), '', \TYPO3\CMS\Core\Messaging\FlashMessage::OK);
 					
 				} else {
-					$message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-						't3lib_FlashMessage',
-						$GLOBALS['LANG']->getLL('flashmessages.tx_czsimplecal_domain_model_event.updateNoIndex'),
-						'',
-						t3lib_FlashMessage::INFO
-					);
-					t3lib_FlashMessageQueue::addMessage($message);
+					$this->addFlashMessage($GLOBALS['LANG']->getLL('flashmessages.tx_czsimplecal_domain_model_event.updateNoIndex'), '', \TYPO3\CMS\Core\Messaging\FlashMessage::INFO);
 				}
 			}
 		}
+	}
+
+	protected function addFlashMessage($messageBody, $messageTitle = '', $severity = \TYPO3\CMS\Core\Messaging\AbstractMessage::OK, $storeInSession = TRUE) {
+		/* @var \TYPO3\CMS\Core\Messaging\FlashMessage $flashMessage */
+		$flashMessage = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+			'TYPO3\\CMS\\Core\\Messaging\\FlashMessage', $messageBody, $messageTitle, $severity, $storeInSession
+		);
+		$flashMessageQueue = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Messaging\\FlashMessageQueue', 'core.template.flashMessages');
+		$flashMessageQueue->enqueue($flashMessage);
 	}
 	
 	/**
@@ -103,7 +94,6 @@ class Tx_CzSimpleCal_Hook_Datamap {
 	public function processDatamap_preProcessFieldArray(&$fieldArray, $table, $id, $tce) {
 		if($table == 'tx_czsimplecal_domain_model_event' || $table == 'tx_czsimplecal_domain_model_exception') {
 			
-			\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($table);
 			foreach(array('start_time', 'end_date', 'end_time', 'recurrance_until') as $fieldName) {
 				if(array_key_exists($fieldName, $fieldArray)) {
 					/* 
@@ -162,7 +152,10 @@ class Tx_CzSimpleCal_Hook_Datamap {
 	protected function fetchEventObject($id) {
 		$event = $this->getEventRepository()->findOneByUidEverywhere($id);
 		if(empty($event)) {
-			throw new InvalidArgumentException(sprintf('An event with uid %d could not be found.', $id));
+			$event = $this->getEventRepository()->findByIdentifier($id);
+			if(empty($event)) {
+				throw new InvalidArgumentException(sprintf('An event with uid %d could not be found.', $id));
+			}
 		}
 		return $event;
 	}

@@ -74,7 +74,7 @@ class Tx_CzSimpleCal_Indexer_Event {
 			$event = $this->fetchEventObject($event);
 		}
 		
-		$this->doDelete($event);
+		$this->doDelete($event->getUid());
 		$this->doCreate($event);
 		
 	}
@@ -86,21 +86,23 @@ class Tx_CzSimpleCal_Indexer_Event {
 	 */
 	public function delete($event) {
 		if(is_integer($event)) {
-			$event = $this->fetchEventObject($event);
+			$this->doDelete($event);
+		} else {
+			$this->doDelete($event->getUid());
 		}
 		
-		$this->doDelete($event);
+
 	}
 	
 	/**
 	 * delete an event
 	 * 
-	 * @param Tx_CzSimpleCal_Domain_Model_Event $event
+	 * @param int $eventUid
 	 */
-	protected function doDelete($event) {
+	protected function doDelete($eventUid) {
 		$GLOBALS['TYPO3_DB']->exec_DELETEquery(
 			self::$eventIndexTable,
-			'event = '.$event->getUid()
+			'event = '.$eventUid
 		);
 	}
 	
