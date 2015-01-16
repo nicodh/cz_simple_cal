@@ -96,7 +96,7 @@
 		</languageKey>
 		
 		<languageKey index="de" type="array">
-			<label index="tx_czsimplecal_domain_model_event">Event</label>
+			<label index="tx_czsimplecal_domain_model_event">Veranstaltung</label>
 			<label index="tx_czsimplecal_domain_model_event.title">Titel</label>
 			<label index="tx_czsimplecal_domain_model_event.start_day">Tag Beginn</label>
 			<label index="tx_czsimplecal_domain_model_event.start_time">Zeit Beginn</label>
