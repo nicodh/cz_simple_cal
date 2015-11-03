@@ -55,6 +55,7 @@ $TCA['tx_czsimplecal_domain_model_event'] = array (
 		'label'             => 'title',
 		'tstamp' 			=> 'tstamp',
 		'crdate' 			=> 'crdate',
+		'searchFields' 		=> 'title,start_day,end_day,teaser,description',
 		'default_sortby'    => 'ORDER BY start_day DESC, start_time DESC',
 		'versioningWS' 		=> 2,
 		'versioning_followPages'	=> TRUE,
@@ -71,6 +72,7 @@ $TCA['tx_czsimplecal_domain_model_event'] = array (
 		'iconfile' 			=> \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_czsimplecal_domain_model_event.gif'
 	)
 );
+
 
 $TCA['tx_czsimplecal_domain_model_eventindex'] = array (
 	'ctrl' => array (
